@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PROG_POE.Forms
+namespace PROG_POE.Form
 {
     using System;
     using System.Collections.Generic;
@@ -12,13 +12,15 @@ namespace PROG_POE.Forms
     using System.Text;
     using System.Threading.Tasks;
 
-    using PROG_POE.Models;
-    using PROG_POE.Services.MunicipalServicesApplication.Services;
+    using PROG_Part_2.Models;
+    using PROG_Part_2.Services.MunicipalServicesApplication.Services;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
+
+
 
 
 
