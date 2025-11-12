@@ -6,10 +6,9 @@ using System.Threading.Tasks;
 
 namespace PROG_POE.Form
 {
-    using PROG_Part_2.Models;
-    using PROG_Part_2.Models.PROG_Part_2.Models;
-    using PROG_Part_2.Services;
-    using PROG_Part_2.Services.PROG_Part_2.Services;
+
+    using PROG_POE.Model;
+    using PROG_POE.Service;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
@@ -417,4 +416,4 @@ namespace PROG_POE.Form
             }
         }
     }
-}
+

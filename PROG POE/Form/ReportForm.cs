@@ -1,9 +1,16 @@
-﻿using System;
+﻿
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
+using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement;
 
+
+using global::PROG_POE.Model;
+using global::PROG_POE.Service;
 namespace PROG_POE.Form
 {
     using System;
@@ -11,12 +18,6 @@ namespace PROG_POE.Form
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-    using global::PROG_Part_2.Models;
-    using global::PROG_Part_2.Services;
-    using global::PROG_Part_2.Services.MunicipalServicesApplication.Services;
-    using PROG_Part_2.Models;
-    using PROG_Part_2.Services;
-    using System;
     using System.IO;
     using System.Windows.Forms;
     using static System.Windows.Forms.VisualStyles.VisualStyleElement;
@@ -25,8 +26,7 @@ namespace PROG_POE.Form
         using global::PROG_POE.Model;
         using global::PROG_POE.Service;
 
-        namespace PROG_Part_2
-        {
+        
             public partial class ReportForm : Form  // Make sure it inherits from Form
             {
                 private readonly IDataService _dataService;
@@ -179,4 +179,4 @@ namespace PROG_POE.Form
             }
         }
 
-    }
+    

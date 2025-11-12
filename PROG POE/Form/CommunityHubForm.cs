@@ -11,23 +11,15 @@ namespace PROG_POE.Form
     using System.Linq;
     using System.Text;
     using System.Threading.Tasks;
-
-    using PROG_Part_2.Models;
-    using PROG_Part_2.Services.MunicipalServicesApplication.Services;
     using System;
     using System.Collections.Generic;
     using System.Drawing;
     using System.Linq;
     using System.Windows.Forms;
+    using PROG_POE.Service;
+    using PROG_POE.Model;
 
-
-
-
-
-
-
-
-        public partial class CommunityHubForm : Form
+    public partial class CommunityHubForm : Form
         {
             private readonly IDataService _dataService;
             private List<CommunityIssue> _communityIssues;

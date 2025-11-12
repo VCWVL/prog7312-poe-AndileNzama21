@@ -251,5 +251,4 @@ namespace PROG_POE.Form
                 private System.Windows.Forms.Label lblEncouragement;
             }
         }
-    }
-}
+ 
