@@ -1,5 +1,6 @@
 ﻿
 using PROG_POE.Formz;
+using PROG_POE.Model;
 using PROG_POE.Service;
 using System;
 using System.Collections.Generic;
@@ -26,17 +27,26 @@ namespace PROG_POE
             _eventService = new EventService();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
-        {
-            btnEvents.Enabled = true; // Now enabled for Part 2
-            btnStatus.Enabled = false;
-            btnCommunityHub.Enabled = true;
-        }
 
         private void btnReport_Click(object sender, EventArgs e)
         {
             ReportForm reportForm = new ReportForm(_dataService);
             reportForm.Show();
+            this.Hide();
+        }
+
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            btnEvents.Enabled = true;
+            btnStatus.Enabled = true; // Now enabled for Part 3
+            btnCommunityHub.Enabled = true;
+        }
+
+        private void btnStatus_Click(object sender, EventArgs e)
+        {
+            var requestService = new RequestService();
+            RequestStatusForm statusForm = new RequestStatusForm(requestService);
+            statusForm.Show();
             this.Hide();
         }
 

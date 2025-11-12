@@ -46,6 +46,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Formz\RequestDetailsForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formz\RequestDetailsForm.Designer.cs">
+      <DependentUpon>RequestDetailsForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Formz\RequestStatusForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Formz\RequestStatusForm.Designer.cs">
+      <DependentUpon>RequestStatusForm.cs</DependentUpon>
+    </Compile>
     <Compile Include="MainForm.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -71,8 +83,12 @@
       <DependentUpon>ReportForm.cs</DependentUpon>
     </Compile>
     <Compile Include="Model\CommunityIssue.cs" />
+    <Compile Include="Model\AdvancedDataStructures.cs" />
     <Compile Include="Model\Event.cs" />
+    <Compile Include="Model\IRequestService.cs" />
     <Compile Include="Model\ReportedIssue.cs" />
+    <Compile Include="Model\RequestService.cs" />
+    <Compile Include="Model\ServiceRequest.cs" />
     <Compile Include="Model\UserProfile.cs" />
     <Compile Include="Model\UserSearch.cs" />
     <Compile Include="Program.cs" />
