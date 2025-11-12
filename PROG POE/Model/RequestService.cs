@@ -280,11 +280,20 @@ namespace PROG_POE.Model
             if (resolvedRequests.Any())
             {
                 stats.AverageResolutionDays = resolvedRequests
-                    .Average(r => (r.UpdatedDate ?? DateTime.Now - r.CreatedDate).TotalDays);
+                    .Average(r =>
+                    {
+                        // Use UpdatedDate if available, otherwise use current time
+                        DateTime endDate = r.UpdatedDate ?? DateTime.Now;
+                        return (endDate - r.CreatedDate).TotalDays;
+                    });
+            }
+            else
+            {
+                stats.AverageResolutionDays = 0;
             }
 
             return stats;
         }
     }
 }
-}
+

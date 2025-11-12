@@ -114,6 +114,9 @@ namespace PROG_POE.Formz
         {
             flowLayoutPriority.Controls.Clear();
 
+            // Get the total requests count from the priority data
+            int totalRequests = priorityData.Sum(kvp => kvp.Value);
+
             foreach (var kvp in priorityData.OrderByDescending(k => k.Key))
             {
                 var panel = new Panel
@@ -148,7 +151,7 @@ namespace PROG_POE.Formz
                     Location = new Point(3, 43),
                     Size = new Size(110, 12),
                     Minimum = 0,
-                    Maximum = stats.TotalRequests,
+                    Maximum = totalRequests > 0 ? totalRequests : 1, // Avoid division by zero
                     Value = kvp.Value
                 };
                 panel.Controls.Add(progressBar);
@@ -196,21 +199,29 @@ namespace PROG_POE.Formz
 
         private void LoadAdvancedDataStructureExamples()
         {
-            // Demonstrate Binary Search Tree
-            var bstRequests = _requestService.SearchRequestsBST("SR-1001", "SR-1005");
-            lblBSTDemo.Text = $"BST Range Search (SR-1001 to SR-1005): {bstRequests.Count} requests found";
+            try
+            {
+                // Demonstrate Binary Search Tree
+                var bstRequests = _requestService.SearchRequestsBST("SR-1001", "SR-1005");
+                lblBSTDemo.Text = $"BST Range Search (SR-1001 to SR-1005): {bstRequests.Count} requests found";
 
-            // Demonstrate Priority Heap
-            var priorityRequests = _requestService.GetPriorityRequests();
-            lblHeapDemo.Text = $"Priority Heap - Top {priorityRequests.Count} highest priority requests";
+                // Demonstrate Priority Heap
+                var priorityRequests = _requestService.GetPriorityRequests();
+                lblHeapDemo.Text = $"Priority Heap - Top {priorityRequests.Count} highest priority requests";
 
-            // Demonstrate Graph BFS
-            var relatedRequests = _requestService.GetRelatedRequests("SR-1001");
-            lblGraphDemo.Text = $"Graph BFS - {relatedRequests.Count} requests related to SR-1001";
+                // Demonstrate Graph BFS
+                var relatedRequests = _requestService.GetRelatedRequests("SR-1001");
+                lblGraphDemo.Text = $"Graph BFS - {relatedRequests.Count} requests related to SR-1001";
 
-            // Demonstrate Graph MST
-            var criticalPath = _requestService.GetCriticalPath();
-            lblMSTDemo.Text = $"MST Critical Path - {criticalPath.Count} critical requests identified";
+                // Demonstrate Graph MST
+                var criticalPath = _requestService.GetCriticalPath();
+                lblMSTDemo.Text = $"MST Critical Path - {criticalPath.Count} critical requests identified";
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Error loading advanced data structure examples: {ex.Message}",
+                    "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         private void btnSearch_Click(object sender, EventArgs e)
@@ -269,6 +280,7 @@ namespace PROG_POE.Formz
         {
             LoadAllRequests();
             UpdateStatistics();
+            LoadAdvancedDataStructureExamples();
         }
 
         private void btnBack_Click(object sender, EventArgs e)
@@ -325,5 +337,4 @@ namespace PROG_POE.Formz
             }
         }
     }
-}
 }
