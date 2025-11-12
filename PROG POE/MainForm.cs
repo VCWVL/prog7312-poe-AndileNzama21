@@ -1,8 +1,6 @@
-﻿using PROG_POE.Form;
+﻿
+using PROG_POE.Formz;
 using PROG_POE.Service;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -12,15 +10,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using PROG_POE.Form;
-using PROG_POE.Service;
-
-
-
 
 namespace PROG_POE
 {
-
 
     public partial class MainForm : Form
     {
@@ -48,11 +40,6 @@ namespace PROG_POE
             this.Hide();
         }
 
-        private void Hide()
-        {
-            throw new NotImplementedException();
-        }
-
         private void btnEvents_Click(object sender, EventArgs e)
         {
             EventsForm eventsForm = new EventsForm(_eventService);
@@ -71,11 +58,5 @@ namespace PROG_POE
         {
             Application.Exit();
         }
-
-        internal void Show()
-        {
-            throw new NotImplementedException();
-        }
     }
-
 }

@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace PROG_POE.Form
+namespace PROG_POE.Formz
 {
 
     using PROG_POE.Model;

@@ -1,17 +1,5 @@
 ﻿
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.IO;
-using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement;
-
-
-using global::PROG_POE.Model;
-using global::PROG_POE.Service;
-namespace PROG_POE.Form
+namespace PROG_POE.Formz
 {
     using System;
     using System.Collections.Generic;
