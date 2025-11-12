@@ -1,6 +1,5 @@
 ﻿namespace PROG_POE
 {
-
     partial class MainForm
     {
         private System.ComponentModel.IContainer components = null;
@@ -54,7 +53,7 @@
             // 
             // btnStatus
             // 
-            this.btnStatus.BackColor = System.Drawing.Color.Gray;
+            this.btnStatus.BackColor = System.Drawing.Color.SteelBlue; // Changed from Gray to SteelBlue
             this.btnStatus.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnStatus.ForeColor = System.Drawing.Color.White;
             this.btnStatus.Location = new System.Drawing.Point(100, 200);
@@ -63,6 +62,7 @@
             this.btnStatus.TabIndex = 2;
             this.btnStatus.Text = "Service Request Status";
             this.btnStatus.UseVisualStyleBackColor = false;
+            this.btnStatus.Click += new System.EventHandler(this.btnStatus_Click); // Added click event handler
             // 
             // btnExit
             // 

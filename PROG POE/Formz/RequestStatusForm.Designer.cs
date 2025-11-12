@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
-namespace PROG_POE.Formz
+namespace PROG_POE.Forms
 {
     partial class RequestStatusForm
     {
@@ -357,11 +361,11 @@ namespace PROG_POE.Formz
             this.panel3.Controls.Add(this.label7);
             this.panel3.Controls.Add(this.flowLayoutPriority);
             this.panel3.Controls.Add(this.label6);
-            this.panel3.Controls.Add(this.lblAvgResolution);
-            this.panel3.Controls.Add(this.lblResolved);
-            this.panel3.Controls.Add(this.lblInProgress);
-            this.panel3.Controls.Add(this.lblSubmitted);
-            this.panel3.Controls.Add(this.lblTotalRequests);
+            this.lblAvgResolution = new System.Windows.Forms.Label();
+            this.lblResolved = new System.Windows.Forms.Label();
+            this.lblInProgress = new System.Windows.Forms.Label();
+            this.lblSubmitted = new System.Windows.Forms.Label();
+            this.lblTotalRequests = new System.Windows.Forms.Label();
             this.panel3.Location = new System.Drawing.Point(620, 12);
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(292, 130);
@@ -591,5 +595,4 @@ namespace PROG_POE.Formz
         private System.Windows.Forms.Label lblGraphDemo;
         private System.Windows.Forms.Label lblMSTDemo;
     }
-
 }

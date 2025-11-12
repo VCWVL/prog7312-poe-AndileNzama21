@@ -188,6 +188,7 @@ namespace PROG_POE.Model
                 }
             }
         }
+       
 
         public List<RequestUpdate> GetRequestUpdates(string referenceNumber)
         {

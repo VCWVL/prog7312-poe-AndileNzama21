@@ -1,31 +1,35 @@
-﻿using PROG_POE.Model;
+﻿using PROG_POE.Formz;
+using PROG_POE.Model;
+
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
-namespace PROG_POE.Formz
+namespace PROG_POE.Forms
 {
     public partial class RequestStatusForm : Form
     {
         private readonly IRequestService _requestService;
         private List<ServiceRequest> _currentRequests;
+        private bool _isInitializing = true;
 
         public RequestStatusForm(IRequestService requestService)
         {
             InitializeComponent();
             _requestService = requestService;
+            _currentRequests = new List<ServiceRequest>(); // Initialize to empty list
         }
 
         private void RequestStatusForm_Load(object sender, EventArgs e)
         {
+            _isInitializing = true;
             LoadAllRequests();
             InitializeFilters();
             UpdateStatistics();
             LoadAdvancedDataStructureExamples();
+            _isInitializing = false;
         }
 
         private void LoadAllRequests()
@@ -42,7 +46,6 @@ namespace PROG_POE.Formz
             {
                 cmbStatusFilter.Items.Add(status.ToString());
             }
-            cmbStatusFilter.SelectedIndex = 0;
 
             cmbPriorityFilter.Items.Clear();
             cmbPriorityFilter.Items.Add("All Priorities");
@@ -50,28 +53,53 @@ namespace PROG_POE.Formz
             {
                 cmbPriorityFilter.Items.Add(priority.ToString());
             }
-            cmbPriorityFilter.SelectedIndex = 0;
 
             cmbCategoryFilter.Items.Clear();
             cmbCategoryFilter.Items.Add("All Categories");
-            var categories = _currentRequests.Select(r => r.Category).Distinct().OrderBy(c => c);
+
+            // Safely get categories
+            var categories = _currentRequests?.Select(r => r.Category).Distinct().OrderBy(c => c).ToList() ?? new List<string>();
             foreach (var category in categories)
             {
                 cmbCategoryFilter.Items.Add(category);
             }
+
+            // Set initial selections
+            cmbStatusFilter.SelectedIndex = 0;
+            cmbPriorityFilter.SelectedIndex = 0;
             cmbCategoryFilter.SelectedIndex = 0;
         }
 
         private void DisplayRequests(List<ServiceRequest> requests)
         {
+            if (listViewRequests == null) return;
+
             listViewRequests.Items.Clear();
+
+            if (requests == null || !requests.Any())
+            {
+                var noResultsItem = new ListViewItem("No requests found");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                noResultsItem.SubItems.Add("");
+                listViewRequests.Items.Add(noResultsItem);
+
+                if (lblResultsCount != null)
+                    lblResultsCount.Text = "0 requests found";
+                return;
+            }
 
             foreach (var request in requests.OrderByDescending(r => r.CreatedDate))
             {
-                var item = new ListViewItem(request.ReferenceNumber);
-                item.SubItems.Add(request.Title);
-                item.SubItems.Add(request.Category);
-                item.SubItems.Add(request.Location);
+                var item = new ListViewItem(request.ReferenceNumber ?? "N/A");
+                item.SubItems.Add(request.Title ?? "N/A");
+                item.SubItems.Add(request.Category ?? "N/A");
+                item.SubItems.Add(request.Location ?? "N/A");
                 item.SubItems.Add(request.Priority.ToString());
                 item.SubItems.Add(request.Status.ToString());
                 item.SubItems.Add(request.CreatedDate.ToShortDateString());
@@ -92,29 +120,30 @@ namespace PROG_POE.Formz
                 listViewRequests.Items.Add(item);
             }
 
-            lblResultsCount.Text = $"{requests.Count} requests found";
+            if (lblResultsCount != null)
+                lblResultsCount.Text = $"{requests.Count} requests found";
         }
 
         private void UpdateStatistics()
         {
             var stats = _requestService.GetStatistics();
 
-            lblTotalRequests.Text = $"Total: {stats.TotalRequests}";
-            lblSubmitted.Text = $"Submitted: {stats.SubmittedCount}";
-            lblInProgress.Text = $"In Progress: {stats.InProgressCount}";
-            lblResolved.Text = $"Resolved: {stats.ResolvedCount}";
-            lblAvgResolution.Text = $"Avg Resolution: {stats.AverageResolutionDays:F1} days";
+            if (lblTotalRequests != null) lblTotalRequests.Text = $"Total: {stats.TotalRequests}";
+            if (lblSubmitted != null) lblSubmitted.Text = $"Submitted: {stats.SubmittedCount}";
+            if (lblInProgress != null) lblInProgress.Text = $"In Progress: {stats.InProgressCount}";
+            if (lblResolved != null) lblResolved.Text = $"Resolved: {stats.ResolvedCount}";
+            if (lblAvgResolution != null) lblAvgResolution.Text = $"Avg Resolution: {stats.AverageResolutionDays:F1} days";
 
-            // Update charts
             UpdatePriorityChart(stats.RequestsByPriority);
             UpdateCategoryChart(stats.RequestsByCategory);
         }
 
         private void UpdatePriorityChart(Dictionary<RequestPriority, int> priorityData)
         {
+            if (flowLayoutPriority == null) return;
+
             flowLayoutPriority.Controls.Clear();
 
-            // Get the total requests count from the priority data
             int totalRequests = priorityData.Sum(kvp => kvp.Value);
 
             foreach (var kvp in priorityData.OrderByDescending(k => k.Key))
@@ -151,7 +180,7 @@ namespace PROG_POE.Formz
                     Location = new Point(3, 43),
                     Size = new Size(110, 12),
                     Minimum = 0,
-                    Maximum = totalRequests > 0 ? totalRequests : 1, // Avoid division by zero
+                    Maximum = totalRequests > 0 ? totalRequests : 1,
                     Value = kvp.Value
                 };
                 panel.Controls.Add(progressBar);
@@ -162,6 +191,8 @@ namespace PROG_POE.Formz
 
         private void UpdateCategoryChart(Dictionary<string, int> categoryData)
         {
+            if (flowLayoutCategory == null) return;
+
             flowLayoutCategory.Controls.Clear();
 
             foreach (var kvp in categoryData.OrderByDescending(k => k.Value))
@@ -201,21 +232,21 @@ namespace PROG_POE.Formz
         {
             try
             {
-                // Demonstrate Binary Search Tree
                 var bstRequests = _requestService.SearchRequestsBST("SR-1001", "SR-1005");
-                lblBSTDemo.Text = $"BST Range Search (SR-1001 to SR-1005): {bstRequests.Count} requests found";
+                if (lblBSTDemo != null)
+                    lblBSTDemo.Text = $"BST Range Search (SR-1001 to SR-1005): {bstRequests.Count} requests found";
 
-                // Demonstrate Priority Heap
                 var priorityRequests = _requestService.GetPriorityRequests();
-                lblHeapDemo.Text = $"Priority Heap - Top {priorityRequests.Count} highest priority requests";
+                if (lblHeapDemo != null)
+                    lblHeapDemo.Text = $"Priority Heap - Top {priorityRequests.Count} highest priority requests";
 
-                // Demonstrate Graph BFS
                 var relatedRequests = _requestService.GetRelatedRequests("SR-1001");
-                lblGraphDemo.Text = $"Graph BFS - {relatedRequests.Count} requests related to SR-1001";
+                if (lblGraphDemo != null)
+                    lblGraphDemo.Text = $"Graph BFS - {relatedRequests.Count} requests related to SR-1001";
 
-                // Demonstrate Graph MST
                 var criticalPath = _requestService.GetCriticalPath();
-                lblMSTDemo.Text = $"MST Critical Path - {criticalPath.Count} critical requests identified";
+                if (lblMSTDemo != null)
+                    lblMSTDemo.Text = $"MST Critical Path - {criticalPath.Count} critical requests identified";
             }
             catch (Exception ex)
             {
@@ -231,17 +262,26 @@ namespace PROG_POE.Formz
 
         private void FilterRequests()
         {
-            string searchText = txtSearch.Text.ToLower();
-            string statusFilter = cmbStatusFilter.SelectedIndex == 0 ? null : cmbStatusFilter.SelectedItem.ToString();
-            string priorityFilter = cmbPriorityFilter.SelectedIndex == 0 ? null : cmbPriorityFilter.SelectedItem.ToString();
-            string categoryFilter = cmbCategoryFilter.SelectedIndex == 0 ? null : cmbCategoryFilter.SelectedItem.ToString();
+            // Ensure _currentRequests is not null
+            if (_currentRequests == null)
+            {
+                _currentRequests = new List<ServiceRequest>();
+            }
+
+            // Don't filter during initialization
+            if (_isInitializing) return;
+
+            string searchText = txtSearch?.Text?.ToLower() ?? "";
+            string statusFilter = cmbStatusFilter?.SelectedIndex == 0 ? null : cmbStatusFilter?.SelectedItem?.ToString();
+            string priorityFilter = cmbPriorityFilter?.SelectedIndex == 0 ? null : cmbPriorityFilter?.SelectedItem?.ToString();
+            string categoryFilter = cmbCategoryFilter?.SelectedIndex == 0 ? null : cmbCategoryFilter?.SelectedItem?.ToString();
 
             var filteredRequests = _currentRequests.Where(request =>
                 (string.IsNullOrEmpty(searchText) ||
-                 request.ReferenceNumber.ToLower().Contains(searchText) ||
-                 request.Title.ToLower().Contains(searchText) ||
-                 request.Description.ToLower().Contains(searchText) ||
-                 request.Location.ToLower().Contains(searchText)) &&
+                 (request.ReferenceNumber?.ToLower().Contains(searchText) ?? false) ||
+                 (request.Title?.ToLower().Contains(searchText) ?? false) ||
+                 (request.Description?.ToLower().Contains(searchText) ?? false) ||
+                 (request.Location?.ToLower().Contains(searchText) ?? false)) &&
                 (statusFilter == null || request.Status.ToString() == statusFilter) &&
                 (priorityFilter == null || request.Priority.ToString() == priorityFilter) &&
                 (categoryFilter == null || request.Category == categoryFilter)
@@ -252,7 +292,7 @@ namespace PROG_POE.Formz
 
         private void btnViewDetails_Click(object sender, EventArgs e)
         {
-            if (listViewRequests.SelectedItems.Count > 0)
+            if (listViewRequests?.SelectedItems?.Count > 0 && listViewRequests.SelectedItems[0].Tag != null)
             {
                 string referenceNumber = listViewRequests.SelectedItems[0].Tag.ToString();
                 ShowRequestDetails(referenceNumber);
@@ -270,7 +310,6 @@ namespace PROG_POE.Formz
             if (request != null)
             {
                 var updates = _requestService.GetRequestUpdates(referenceNumber);
-
                 var detailsForm = new RequestDetailsForm(request, updates);
                 detailsForm.ShowDialog();
             }
@@ -322,7 +361,7 @@ namespace PROG_POE.Formz
 
         private void btnShowRelated_Click(object sender, EventArgs e)
         {
-            if (listViewRequests.SelectedItems.Count > 0)
+            if (listViewRequests?.SelectedItems?.Count > 0 && listViewRequests.SelectedItems[0].Tag != null)
             {
                 string referenceNumber = listViewRequests.SelectedItems[0].Tag.ToString();
                 var relatedRequests = _requestService.GetRelatedRequests(referenceNumber);

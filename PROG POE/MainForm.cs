@@ -2,6 +2,7 @@
 using PROG_POE.Formz;
 using PROG_POE.Model;
 using PROG_POE.Service;
+
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -14,19 +15,26 @@ using System.Windows.Forms;
 
 namespace PROG_POE
 {
-
     public partial class MainForm : Form
     {
         private readonly IDataService _dataService;
         private readonly IEventService _eventService;
+        private readonly IRequestService _requestService;
 
         public MainForm()
         {
             InitializeComponent();
             _dataService = new DataService();
             _eventService = new EventService();
+            _requestService = new RequestService(); // Initialize the request service
         }
 
+        private void MainForm_Load(object sender, EventArgs e)
+        {
+            btnEvents.Enabled = true;
+            btnStatus.Enabled = true; // Enable the status button
+            btnCommunityHub.Enabled = true;
+        }
 
         private void btnReport_Click(object sender, EventArgs e)
         {
@@ -35,25 +43,18 @@ namespace PROG_POE
             this.Hide();
         }
 
-        private void MainForm_Load(object sender, EventArgs e)
+        private void btnEvents_Click(object sender, EventArgs e)
         {
-            btnEvents.Enabled = true;
-            btnStatus.Enabled = true; // Now enabled for Part 3
-            btnCommunityHub.Enabled = true;
+            EventsForm eventsForm = new EventsForm(_eventService);
+            eventsForm.Show();
+            this.Hide();
         }
 
         private void btnStatus_Click(object sender, EventArgs e)
         {
             var requestService = new RequestService();
-            RequestStatusForm statusForm = new RequestStatusForm(requestService);
+            var statusForm = new PROG_POE.Forms.RequestStatusForm(requestService); // Full namespace
             statusForm.Show();
-            this.Hide();
-        }
-
-        private void btnEvents_Click(object sender, EventArgs e)
-        {
-            EventsForm eventsForm = new EventsForm(_eventService);
-            eventsForm.Show();
             this.Hide();
         }
 
